@@ -32,10 +32,26 @@ const typeDefs = gql`
     projects: [Project!]!
   }
 
+  union NewsfeedItemData = Announcement | Project | User
+
+  type NewsfeedItem {
+    type: String!
+    id: Int!
+    created_ts: String!
+    data: NewsfeedItemData!
+  }
+
+  enum Fellowship {
+    founders
+    angels
+    writers
+  }
+  
   type Query {
     announcement(id: Int!): Announcement!
     project(id: Int!): Project!
     user(id: Int!): User!
+    newsfeed(fellowship: Fellowship!, offset: Int!, limit: Int!): [NewsfeedItem!]!
   }
 `;
 

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import Card from './Card'
 import Markdown from './Markdown'
 
@@ -15,7 +16,7 @@ type Announcement = {
 export default function AnnouncementCard({announcement}: Props) {
   return (
     <Card>
-      <h2>{announcement.title}</h2>
+      <h2><Link href={`/announcements/${announcement.id}`}>{announcement.title}</Link></h2>
       <p>Fellowship: {announcement.fellowship}</p>
       <Markdown>{announcement.body}</Markdown>
     </Card>

@@ -12,7 +12,7 @@ type Project = {
   name: string;
   description: string;
   icon_url: string;
-  users: User[];
+  users?: User[];
 }
 
 type User = {
@@ -29,9 +29,9 @@ export default function ProjectCard({project}: Props) {
           <Icon src={project.icon_url}/>
         </ColumnLeft>
         <ColumnRight>
-          <h2>{project.name}</h2>
+          <h2><Link href={`/projects/${project.id}`}>{project.name}</Link></h2>
           <Markdown>{project.description}</Markdown>
-          {!!project.users.length && (
+          {!!project?.users?.length && (
             <>
               <h3>Participants:</h3>
               {project.users.map(u => (

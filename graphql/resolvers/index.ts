@@ -1,3 +1,6 @@
+export {Fellowship} from './Fellowship'
+export * as NewsfeedItem from './NewsfeedItem'
+export * as NewsfeedItemData from './NewsfeedItemData'
 export * as User from './User'
 export * as Project from './Project'
 export * as Query from './Query'

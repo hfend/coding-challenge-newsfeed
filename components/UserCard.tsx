@@ -13,7 +13,7 @@ type User = {
   bio: string;
   fellowship: "fellows" | "angels" | "writers";
   avatar_url: string;
-  projects: Project[];
+  projects?: Project[];
 }
 
 type Project = {
@@ -30,10 +30,10 @@ export default function UserCard({user}: Props) {
           <Avatar src={user.avatar_url}/>
         </ColumnLeft>
         <ColumnRight>
-          <h2>{user.name}</h2>
+          <h2><Link href={`/users/${user.id}`}>{user.name}</Link></h2>
           <p>Fellowship: {user.fellowship}</p>
           <Markdown>{user.bio}</Markdown>
-          {!!user.projects.length && (
+          {!!user?.projects?.length && (
             <>
               <h3>Projects:</h3>
               {user.projects.map(p => (
