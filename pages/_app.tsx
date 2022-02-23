@@ -1,7 +1,8 @@
-import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client'
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import {ApolloProvider} from '@apollo/client'
 import {createGlobalStyle, ThemeProvider} from 'styled-components'
 import type { AppProps } from 'next/app'
+
+import client from 'graphql_client/client'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -15,19 +16,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     </>
   )
 }
-
-const client = new ApolloClient({
-  uri: '/api/graphql',
-  cache : new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          newsfeed: offsetLimitPagination(["fellowship", "limit"])
-        }
-      }
-    }
-  })
-})
 
 const theme = {
   colors: {

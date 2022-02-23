@@ -1,10 +1,12 @@
 import {useRouter} from 'next/router'
-import {useQuery, gql} from '@apollo/client'
+import {gql} from '@apollo/client'
 import Layout from 'components/Layout'
 import ProjectCard from 'components/ProjectCard'
 
-const PROJECT_QUERY = gql`
-  query project($id: Int!) {
+import { useSingleProjectQuery } from "graphql_client/generated"
+
+gql`
+  query SingleProject($id: Int!) {
     project(id: $id) {
       id
       name
@@ -19,33 +21,10 @@ const PROJECT_QUERY = gql`
   }
 `
 
-type QueryData = {
-  project: Project;
-}
-
-type QueryVars = {
-  id: number;
-}
-
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  icon_url: string;
-  users: User[];
-}
-
-type User = {
-  id: number;
-  name: string;
-  avatar_url: string;
-}
-
 export default function ProjectPage() {
   const {query} = useRouter()
 
-  const {data, error, loading} = useQuery<QueryData, QueryVars>(
-    PROJECT_QUERY,
+  const {data, error, loading} = useSingleProjectQuery(
     {
       skip: !query.id,
       variables: {id: Number(query.id)},

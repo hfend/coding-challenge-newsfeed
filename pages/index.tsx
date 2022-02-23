@@ -9,6 +9,9 @@ import Card from 'components/Card'
 import Layout from 'components/Layout'
 import Newsfeed from 'components/Newsfeed'
 
+import { useNewsfeedQuery } from "graphql_client/generated"
+import { Fellowship } from "graphql_client/generated"
+
 
 // TODO
 // - Inifnite scroll (pagination must be reflected in query args)
@@ -19,8 +22,8 @@ type fellowship = "founders" | "angels" | "writers"
 
 const PER_PAGE = 10  // TODO move to a better place
 
-const NEWSFEED_QUERY = gql`
-  query newsfeed($fellowship: Fellowship!, $offset: Int!, $limit: Int!) {
+gql`
+  query Newsfeed($fellowship: Fellowship!, $offset: Int!, $limit: Int!) {
     newsfeed(fellowship: $fellowship, offset: $offset, limit: $limit) {
 
       id
@@ -48,48 +51,6 @@ const NEWSFEED_QUERY = gql`
   }
 `
 
-type QueryData = {
-  newsfeed: NewsfeedItem[];
-}
-
-type QueryVars = {
-  fellowship: fellowship;
-  offset: Number;
-  limit: Number;
-}
-
-type Announcement = {
-  id: number;
-  fellowship: string;
-  title: string;
-  body: string;
-}
-
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  icon_url: string;
-  users: User[];
-}
-
-type User = {
-  id: number;
-  name: string;
-  bio: string;
-  fellowship: fellowship;
-  avatar_url: string;
-  projects: Project[];
-}
-
-type NewsfeedItem = {
-  id: number;
-  type: "Announcement" | "Project" | "User";
-  announcement: Announcement | null
-  project: Project | null
-  user: User | null
-}
-
 // TODO validate queryFellowship, cookieFellowship, queryPage
 
 function Home() {
@@ -97,9 +58,9 @@ function Home() {
   const { query, push } = useRouter()
 
   // Setup fellowship and page state
-  let queryFellowship: fellowship | undefined = undefined
+  let queryFellowship: Fellowship | undefined = undefined
   if (query['fellowship'] && typeof query['fellowship'] === 'string') {
-    queryFellowship = query['fellowship'] as fellowship
+    queryFellowship = query['fellowship'] as Fellowship
   }
 
   let queryPage: number | undefined = undefined
@@ -110,7 +71,7 @@ function Home() {
   const [cookies, setCookie] = useCookies(["fellowship"])
   const cookieFellowship = cookies['fellowship']
 
-  const [fellowship, setFellowship] = useState<fellowship>(queryFellowship || cookieFellowship || 'founders');
+  const [fellowship, setFellowship] = useState<Fellowship>(queryFellowship || cookieFellowship || 'founders');
   const [page, setPage] = useState<number>(/*queryPage !== undefined ?  queryPage :*/ 1);
   const [endReached, setEndReached] = useState<boolean>(false);
 
@@ -138,8 +99,7 @@ function Home() {
   }, [/*page,*/ fellowship])
 
   // Query newsfeed
-  const {data, error, loading, fetchMore, refetch, networkStatus} = useQuery<QueryData, QueryVars>(
-    NEWSFEED_QUERY,
+  const {data, error, loading, fetchMore, refetch, networkStatus} = useNewsfeedQuery(
     {
       skip: !fellowship || page === undefined,
       notifyOnNetworkStatusChange: true,
@@ -157,7 +117,7 @@ function Home() {
 
   // event handlers
   const handleFellowshipSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFellowship(event.target.value as fellowship) // TODO validate
+    setFellowship(event.target.value as Fellowship)
   }
 
   const handlePageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,9 +150,9 @@ function Home() {
         <h2>On Deck Newsfeed 🚀</h2>
         <p>
           View as: <select value={fellowship} onChange={handleFellowshipSelect} disabled={loading || loadingMore} >
-            <option value="founders">Founder</option>
-            <option value="angels">Angel</option>
-            <option value="writers">Writer</option>
+            <option value={Fellowship.Founders}>Founder</option>
+            <option value={Fellowship.Angels}>Angel</option>
+            <option value={Fellowship.Writers}>Writer</option>
           </select>
         </p>
         <p>

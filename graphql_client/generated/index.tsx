@@ -94,12 +94,12 @@ export type User = {
   updated_ts: Scalars['String'];
 };
 
-export type AnnouncementQueryVariables = Exact<{
+export type SingleAnnouncementQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type AnnouncementQuery = { __typename?: 'Query', announcement: { __typename?: 'Announcement', id: number, fellowship: string, title: string, body: string } };
+export type SingleAnnouncementQuery = { __typename?: 'Query', announcement: { __typename?: 'Announcement', id: number, fellowship: string, title: string, body: string } };
 
 export type NewsfeedQueryVariables = Exact<{
   fellowship: Fellowship;
@@ -110,23 +110,23 @@ export type NewsfeedQueryVariables = Exact<{
 
 export type NewsfeedQuery = { __typename?: 'Query', newsfeed: Array<{ __typename?: 'NewsfeedItem', id: number, type: string, announcement?: { __typename?: 'Announcement', id: number, fellowship: string, title: string, body: string } | null, project?: { __typename?: 'Project', id: number, name: string, description: string, icon_url: string } | null, user?: { __typename?: 'User', id: number, name: string, bio: string, fellowship: string, avatar_url: string } | null }> };
 
-export type ProjectQueryVariables = Exact<{
+export type SingleProjectQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type ProjectQuery = { __typename?: 'Query', project: { __typename?: 'Project', id: number, name: string, description: string, icon_url: string, users: Array<{ __typename?: 'User', id: number, name: string, avatar_url: string }> } };
+export type SingleProjectQuery = { __typename?: 'Query', project: { __typename?: 'Project', id: number, name: string, description: string, icon_url: string, users: Array<{ __typename?: 'User', id: number, name: string, avatar_url: string }> } };
 
-export type UserQueryVariables = Exact<{
+export type SingleUserQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, name: string, bio: string, fellowship: string, avatar_url: string, projects: Array<{ __typename?: 'Project', id: number, name: string, icon_url: string }> } };
+export type SingleUserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, name: string, bio: string, fellowship: string, avatar_url: string, projects: Array<{ __typename?: 'Project', id: number, name: string, icon_url: string }> } };
 
 
-export const AnnouncementDocument = gql`
-    query announcement($id: Int!) {
+export const SingleAnnouncementDocument = gql`
+    query SingleAnnouncement($id: Int!) {
   announcement(id: $id) {
     id
     fellowship
@@ -137,34 +137,34 @@ export const AnnouncementDocument = gql`
     `;
 
 /**
- * __useAnnouncementQuery__
+ * __useSingleAnnouncementQuery__
  *
- * To run a query within a React component, call `useAnnouncementQuery` and pass it any options that fit your needs.
- * When your component renders, `useAnnouncementQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSingleAnnouncementQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSingleAnnouncementQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAnnouncementQuery({
+ * const { data, loading, error } = useSingleAnnouncementQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useAnnouncementQuery(baseOptions: Apollo.QueryHookOptions<AnnouncementQuery, AnnouncementQueryVariables>) {
+export function useSingleAnnouncementQuery(baseOptions: Apollo.QueryHookOptions<SingleAnnouncementQuery, SingleAnnouncementQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AnnouncementQuery, AnnouncementQueryVariables>(AnnouncementDocument, options);
+        return Apollo.useQuery<SingleAnnouncementQuery, SingleAnnouncementQueryVariables>(SingleAnnouncementDocument, options);
       }
-export function useAnnouncementLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AnnouncementQuery, AnnouncementQueryVariables>) {
+export function useSingleAnnouncementLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SingleAnnouncementQuery, SingleAnnouncementQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AnnouncementQuery, AnnouncementQueryVariables>(AnnouncementDocument, options);
+          return Apollo.useLazyQuery<SingleAnnouncementQuery, SingleAnnouncementQueryVariables>(SingleAnnouncementDocument, options);
         }
-export type AnnouncementQueryHookResult = ReturnType<typeof useAnnouncementQuery>;
-export type AnnouncementLazyQueryHookResult = ReturnType<typeof useAnnouncementLazyQuery>;
-export type AnnouncementQueryResult = Apollo.QueryResult<AnnouncementQuery, AnnouncementQueryVariables>;
+export type SingleAnnouncementQueryHookResult = ReturnType<typeof useSingleAnnouncementQuery>;
+export type SingleAnnouncementLazyQueryHookResult = ReturnType<typeof useSingleAnnouncementLazyQuery>;
+export type SingleAnnouncementQueryResult = Apollo.QueryResult<SingleAnnouncementQuery, SingleAnnouncementQueryVariables>;
 export const NewsfeedDocument = gql`
-    query newsfeed($fellowship: Fellowship!, $offset: Int!, $limit: Int!) {
+    query Newsfeed($fellowship: Fellowship!, $offset: Int!, $limit: Int!) {
   newsfeed(fellowship: $fellowship, offset: $offset, limit: $limit) {
     id
     type
@@ -220,8 +220,8 @@ export function useNewsfeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<N
 export type NewsfeedQueryHookResult = ReturnType<typeof useNewsfeedQuery>;
 export type NewsfeedLazyQueryHookResult = ReturnType<typeof useNewsfeedLazyQuery>;
 export type NewsfeedQueryResult = Apollo.QueryResult<NewsfeedQuery, NewsfeedQueryVariables>;
-export const ProjectDocument = gql`
-    query project($id: Int!) {
+export const SingleProjectDocument = gql`
+    query SingleProject($id: Int!) {
   project(id: $id) {
     id
     name
@@ -237,34 +237,34 @@ export const ProjectDocument = gql`
     `;
 
 /**
- * __useProjectQuery__
+ * __useSingleProjectQuery__
  *
- * To run a query within a React component, call `useProjectQuery` and pass it any options that fit your needs.
- * When your component renders, `useProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSingleProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSingleProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProjectQuery({
+ * const { data, loading, error } = useSingleProjectQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useProjectQuery(baseOptions: Apollo.QueryHookOptions<ProjectQuery, ProjectQueryVariables>) {
+export function useSingleProjectQuery(baseOptions: Apollo.QueryHookOptions<SingleProjectQuery, SingleProjectQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProjectQuery, ProjectQueryVariables>(ProjectDocument, options);
+        return Apollo.useQuery<SingleProjectQuery, SingleProjectQueryVariables>(SingleProjectDocument, options);
       }
-export function useProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProjectQuery, ProjectQueryVariables>) {
+export function useSingleProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SingleProjectQuery, SingleProjectQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProjectQuery, ProjectQueryVariables>(ProjectDocument, options);
+          return Apollo.useLazyQuery<SingleProjectQuery, SingleProjectQueryVariables>(SingleProjectDocument, options);
         }
-export type ProjectQueryHookResult = ReturnType<typeof useProjectQuery>;
-export type ProjectLazyQueryHookResult = ReturnType<typeof useProjectLazyQuery>;
-export type ProjectQueryResult = Apollo.QueryResult<ProjectQuery, ProjectQueryVariables>;
-export const UserDocument = gql`
-    query user($id: Int!) {
+export type SingleProjectQueryHookResult = ReturnType<typeof useSingleProjectQuery>;
+export type SingleProjectLazyQueryHookResult = ReturnType<typeof useSingleProjectLazyQuery>;
+export type SingleProjectQueryResult = Apollo.QueryResult<SingleProjectQuery, SingleProjectQueryVariables>;
+export const SingleUserDocument = gql`
+    query SingleUser($id: Int!) {
   user(id: $id) {
     id
     name
@@ -281,29 +281,29 @@ export const UserDocument = gql`
     `;
 
 /**
- * __useUserQuery__
+ * __useSingleUserQuery__
  *
- * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSingleUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSingleUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserQuery({
+ * const { data, loading, error } = useSingleUserQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
+export function useSingleUserQuery(baseOptions: Apollo.QueryHookOptions<SingleUserQuery, SingleUserQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+        return Apollo.useQuery<SingleUserQuery, SingleUserQueryVariables>(SingleUserDocument, options);
       }
-export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+export function useSingleUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SingleUserQuery, SingleUserQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+          return Apollo.useLazyQuery<SingleUserQuery, SingleUserQueryVariables>(SingleUserDocument, options);
         }
-export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
-export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
+export type SingleUserQueryHookResult = ReturnType<typeof useSingleUserQuery>;
+export type SingleUserLazyQueryHookResult = ReturnType<typeof useSingleUserLazyQuery>;
+export type SingleUserQueryResult = Apollo.QueryResult<SingleUserQuery, SingleUserQueryVariables>;

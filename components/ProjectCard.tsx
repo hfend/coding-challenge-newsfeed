@@ -3,22 +3,15 @@ import styled from 'styled-components'
 import Card from './Card'
 import Markdown from './Markdown'
 
+import type { Project, User } from "graphql_client/generated"
+
+interface UserLite extends Pick<User, 'id'|'name'|'avatar_url'> {}
+export interface ProjectLite extends Pick<Project, 'id'|'name'|'description'|'icon_url'> {
+  users?: UserLite[]
+}
+
 type Props = {
-  project: Project;
-}
-
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  icon_url: string;
-  users?: User[];
-}
-
-type User = {
-  id: number;
-  name: string;
-  avatar_url: string;
+  project: ProjectLite;
 }
 
 export default function ProjectCard({project}: Props) {
@@ -74,7 +67,7 @@ const ColumnRight = styled.div`
   flex-basis: 14rem;
 `
 
-function Participant({user}: {user: User}) {
+function Participant({user}: {user: UserLite}) {
   return (
     <ParticipantContainer>
       <ParticipantColumnLeft>

@@ -3,47 +3,26 @@ import React, { useEffect, useRef } from 'react'
 import { useIsVisible } from 'utils/hooks'
 
 import Button from 'components/Button'
+
 import AnnouncementCard from 'components/AnnouncementCard'
+import type {AnnouncementLite} from 'components/AnnouncementCard'
+
 import ProjectCard from 'components/ProjectCard'
+import type {ProjectLite} from 'components/ProjectCard'
+
 import UserCard from 'components/UserCard'
+import type {UserLite} from 'components/UserCard'
 
+import type { NewsfeedItem } from "graphql_client/generated"
 
-type fellowship = "founders" | "angels" | "writers"
-
-type Announcement = {
-  id: number;
-  fellowship: string;
-  title: string;
-  body: string;
-}
-
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  icon_url: string;
-  users: User[];
-}
-
-type User = {
-  id: number;
-  name: string;
-  bio: string;
-  fellowship: fellowship;
-  avatar_url: string;
-  projects: Project[];
-}
-
-type NewsfeedItem = {
-  id: number;
-  type: "Announcement" | "Project" | "User";
-  announcement: Announcement | null
-  project: Project | null
-  user: User | null
+interface NewsfeedItemLite extends Pick<NewsfeedItem, 'id'|'type'> {
+  announcement?: AnnouncementLite | null
+  project?: ProjectLite | null
+  user?: UserLite | null
 }
 
 type Props = {
-  data: NewsfeedItem[];
+  data: NewsfeedItemLite[];
   handleLoadMore: Function;
   loadingMore: boolean;
   endReached: boolean;
@@ -70,11 +49,11 @@ export default function Newsfeed({ data, handleLoadMore, loadingMore, endReached
         {data.map(item => {
             switch (item.type) {
             case 'Announcement':
-                return <AnnouncementCard announcement={item.announcement} key={`${item.type}-${item.id}`} />
+                return (!!item.announcement && <AnnouncementCard announcement={item.announcement} key={`${item.type}-${item.id}`} />)
             case 'Project':
-                return <ProjectCard project={item.project} key={`${item.type}-${item.id}`} />
+                return (!!item.project && <ProjectCard project={item.project} key={`${item.type}-${item.id}`} />)
             case 'User':
-                return <UserCard user={item.user} key={`${item.type}-${item.id}`} />
+                return (!!item.user && <UserCard user={item.user} key={`${item.type}-${item.id}`} />)
             }
         })}
         <Button

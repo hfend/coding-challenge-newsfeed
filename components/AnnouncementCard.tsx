@@ -2,15 +2,12 @@ import Link from 'next/link'
 import Card from './Card'
 import Markdown from './Markdown'
 
-type Props = {
-  announcement: Announcement;
-}
+import type { Announcement } from "graphql_client/generated"
 
-type Announcement = {
-  id: number;
-  fellowship: string;
-  title: string;
-  body: string;
+export interface AnnouncementLite extends Pick<Announcement, 'id'|'title'|'fellowship'|'body'> {}
+
+type Props = {
+  announcement: AnnouncementLite;
 }
 
 export default function AnnouncementCard({announcement}: Props) {
