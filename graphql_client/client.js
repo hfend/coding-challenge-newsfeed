@@ -5,6 +5,9 @@ const client = new ApolloClient({
   uri: '/api/graphql',
   cache : new InMemoryCache({
     typePolicies: {
+      NewsfeedItem: {
+        keyFields: ["type", "id"]
+      },
       Query: {
         fields: {
           newsfeed: offsetLimitPagination(["fellowship", "limit"])
