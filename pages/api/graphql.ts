@@ -1,4 +1,4 @@
-import {server} from 'graphql/server'
+import {server} from 'graphql_server/server'
 
 export const config = {
   api: {
