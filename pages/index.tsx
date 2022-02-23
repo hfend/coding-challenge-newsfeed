@@ -18,8 +18,6 @@ import { Fellowship } from "graphql_client/generated"
 // - N+1 queries problem
 // - View As switch (implement as state and note that if it has to be re-used it better be moved to a context that's persisted in a cookie or in local storage)
 
-type fellowship = "founders" | "angels" | "writers"
-
 const PER_PAGE = 10  // TODO move to a better place
 
 gql`
