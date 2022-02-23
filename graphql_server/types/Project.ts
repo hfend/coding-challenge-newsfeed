@@ -1,7 +1,5 @@
 import { objectType, nonNull, list} from 'nexus'
 
-import db, {UserRow} from '../db'
-
 export const Project = objectType({
 
   name: 'Project',
@@ -22,17 +20,8 @@ export const Project = objectType({
 
     t.field('users', {
       type: nonNull(list(nonNull('User'))),
-      async resolve(project) {
-        const users: UserRow[] = await db.getAll(
-          `
-            SELECT u.*
-            FROM user_projects up
-            JOIN users u ON up.user_id = u.id
-            WHERE up.project_id = ?
-          `,
-          [project.id]
-        )
-        return users
+      async resolve(project, _,ctx) {
+        return ctx.projectUsersLoader.load(project.id)
       }
     })
 

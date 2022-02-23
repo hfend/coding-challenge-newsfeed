@@ -1,8 +1,5 @@
 import { extendType, arg, nonNull } from 'nexus'
 
-import db, {UserRow} from '../../db'
-
-
 export const UserQuery = extendType({
 
   type: 'Query',
@@ -16,11 +13,9 @@ export const UserQuery = extendType({
           type: nonNull("Int"),
         })
       },
-      async resolve(_, {id}) {
-        const user: UserRow | undefined = await db.getOne(
-          'SELECT * FROM users WHERE id = ?',
-          [id]
-        )
+      async resolve(_, {id}, ctx) {
+        const user = (await ctx.usersLoader.load(id))[0]
+
         if (!user) {
           throw new Error(`User ${id} not found`)
         }

@@ -1,8 +1,5 @@
 import { extendType, arg, nonNull } from 'nexus'
 
-import db, {AnnouncementRow} from '../../db'
-
-
 export const AnnouncementQuery = extendType({
 
   type: 'Query',
@@ -16,15 +13,13 @@ export const AnnouncementQuery = extendType({
           type: nonNull("Int"),
         })
       },
-      async resolve(_, {id}) {
-        const announcement: AnnouncementRow | undefined = await db.getOne(
-          'SELECT * FROM announcements WHERE id = ?',
-          [id]
-        )
+      async resolve(_, {id}, ctx) {
+        const announcement = (await ctx.announcementsLoader.load(id))[0]
+
         if (!announcement) {
           throw new Error(`Announcement ${id} not found`)
         }
-        return announcement
+          return announcement
       }
     })
 

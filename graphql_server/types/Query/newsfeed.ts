@@ -49,7 +49,7 @@ export const NewsfeedQuery = extendType({
           FROM announcements
           WHERE fellowship = '${fellowship}' OR fellowship = 'all'
         `
-      
+
         // Only show projects for angels or founders, not writers.
         if (['angels', 'founders'].indexOf(fellowship) >= 0) {
           // NOTE

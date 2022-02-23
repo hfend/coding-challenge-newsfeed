@@ -1,8 +1,5 @@
 import { extendType, arg, nonNull } from 'nexus'
 
-import db, {ProjectRow} from '../../db'
-
-
 export const ProjectQuery = extendType({
 
   type: 'Query',
@@ -16,11 +13,9 @@ export const ProjectQuery = extendType({
           type: nonNull("Int"),
         })
       },
-      async resolve(_, {id}) {
-        const project: ProjectRow | undefined = await db.getOne(
-          'SELECT * FROM projects WHERE id = ?',
-          [id]
-        )
+      async resolve(_, {id}, ctx) {
+        const project = (await ctx.projectsLoader.load(id))[0]
+
         if (!project) {
           throw new Error(`Project ${id} not found`)
         }

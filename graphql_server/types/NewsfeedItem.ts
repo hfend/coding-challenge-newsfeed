@@ -1,7 +1,5 @@
 import { objectType } from 'nexus'
 
-import db, {UserRow, ProjectRow, AnnouncementRow} from '../db'
-
 export const NewsfeedItem = objectType({
 
   name: 'NewsfeedItem',
@@ -18,13 +16,11 @@ export const NewsfeedItem = objectType({
 
       type: 'Announcement',
 
-      async resolve(item) {
+      async resolve(item, _, ctx) {
 
         if (item.type === 'Announcement') {
-          const announcement: AnnouncementRow | undefined = await db.getOne(
-            'SELECT * FROM announcements WHERE id = ?',
-            [item.id]
-          )
+          const announcement = (await ctx.announcementsLoader.load(item.id))[0]
+
           if (!announcement) {
             throw new Error(`Announcement ${item.id} not found`)
           }
@@ -40,13 +36,11 @@ export const NewsfeedItem = objectType({
 
       type: 'Project',
 
-      async resolve(item) {
+      async resolve(item, _, ctx) {
 
         if (item.type === 'Project') {
-          const project: ProjectRow | undefined = await db.getOne(
-            'SELECT * FROM projects WHERE id = ?',
-            [item.id]
-          )
+          const project = (await ctx.projectsLoader.load(item.id))[0]
+
           if (!project) {
             throw new Error(`Project ${item.id} not found`)
           }
@@ -62,13 +56,11 @@ export const NewsfeedItem = objectType({
 
       type: 'User',
 
-      async resolve(item) {
+      async resolve(item, _, ctx) {
 
         if (item.type === 'User') {
-          const user: UserRow | undefined = await db.getOne(
-            'SELECT * FROM users WHERE id = ?',
-            [item.id]
-          )
+          const user = (await ctx.usersLoader.load(item.id))[0]
+
           if (!user) {
             throw new Error(`User ${item.id} not found`)
           }
