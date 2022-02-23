@@ -22,28 +22,27 @@ const PER_PAGE = 10  // TODO move to a better place
 const NEWSFEED_QUERY = gql`
   query newsfeed($fellowship: Fellowship!, $offset: Int!, $limit: Int!) {
     newsfeed(fellowship: $fellowship, offset: $offset, limit: $limit) {
-      
-      data {
-        __typename
-        ... on Announcement {
-          id
-          fellowship
-          title
-          body
-        }
-        ... on Project {
-          id
-          name
-          description
-          icon_url
-        }
-        ... on User {
-          id
-          name
-          bio
-          fellowship
-          avatar_url
-        }
+
+      id
+      type
+      announcement {
+        id
+        fellowship
+        title
+        body
+      }
+      project {
+        id
+        name
+        description
+        icon_url
+      }
+      user {
+        id
+        name
+        bio
+        fellowship
+        avatar_url
       }
     }
   }
@@ -84,7 +83,11 @@ type User = {
 }
 
 type NewsfeedItem = {
-  data: (Announcement | Project | User) & {__typename: "Announcement" | "Project" | "User"};
+  id: number;
+  type: "Announcement" | "Project" | "User";
+  announcement: Announcement | null
+  project: Project | null
+  user: User | null
 }
 
 // TODO validate queryFellowship, cookieFellowship, queryPage

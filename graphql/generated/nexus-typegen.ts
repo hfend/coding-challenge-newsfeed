@@ -66,10 +66,9 @@ export interface NexusGenInterfaces {
 }
 
 export interface NexusGenUnions {
-  NewsfeedItemData: NexusGenRootTypes['Announcement'] | NexusGenRootTypes['Project'] | NexusGenRootTypes['User'];
 }
 
-export type NexusGenRootTypes = NexusGenObjects & NexusGenUnions
+export type NexusGenRootTypes = NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
@@ -83,10 +82,12 @@ export interface NexusGenFieldTypes {
     updated_ts: string; // String!
   }
   NewsfeedItem: { // field return type
+    announcement: NexusGenRootTypes['Announcement'] | null; // Announcement
     created_ts: string; // String!
-    data: NexusGenRootTypes['NewsfeedItemData']; // NewsfeedItemData!
     id: number; // Int!
+    project: NexusGenRootTypes['Project'] | null; // Project
     type: string; // String!
+    user: NexusGenRootTypes['User'] | null; // User
   }
   Project: { // field return type
     created_ts: string; // String!
@@ -125,10 +126,12 @@ export interface NexusGenFieldTypeNames {
     updated_ts: 'String'
   }
   NewsfeedItem: { // field return type name
+    announcement: 'Announcement'
     created_ts: 'String'
-    data: 'NewsfeedItemData'
     id: 'Int'
+    project: 'Project'
     type: 'String'
+    user: 'User'
   }
   Project: { // field return type name
     created_ts: 'String'
@@ -177,7 +180,6 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  NewsfeedItemData: "Announcement" | "Project" | "User"
 }
 
 export interface NexusGenTypeInterfaces {
@@ -193,11 +195,11 @@ export type NexusGenInterfaceNames = never;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
-export type NexusGenUnionNames = keyof NexusGenUnions;
+export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "NewsfeedItemData";
+export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

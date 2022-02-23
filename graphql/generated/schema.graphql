@@ -18,13 +18,13 @@ enum Fellowship {
 }
 
 type NewsfeedItem {
+  announcement: Announcement
   created_ts: String!
-  data: NewsfeedItemData!
   id: Int!
+  project: Project
   type: String!
+  user: User
 }
-
-union NewsfeedItemData = Announcement | Project | User
 
 type Project {
   created_ts: String!

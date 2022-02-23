@@ -14,48 +14,72 @@ export const NewsfeedItem = objectType({
 
     t.nonNull.string('created_ts')
 
-    t.nonNull.field('data', {
+    t.field('announcement', {
 
-      type: 'NewsfeedItemData',
+      type: 'Announcement',
 
-      async resolve(newsfeed_row) {
+      async resolve(item) {
 
-        switch (newsfeed_row.type) {
-
-          case 'Announcement':
-            const announcement: AnnouncementRow | undefined = await db.getOne(
-              'SELECT * FROM announcements WHERE id = ?',
-              [newsfeed_row.id]
-            )
-            if (!announcement) {
-              throw new Error(`Announcement ${newsfeed_row.id} not found`)
-            }
-            return {...announcement, type: 'Announcement'}
-
-          case 'Project':
-            const project: ProjectRow | undefined = await db.getOne(
-              'SELECT * FROM projects WHERE id = ?',
-              [newsfeed_row.id]
-            )
-            if (!project) {
-              throw new Error(`Project ${newsfeed_row.id} not found`)
-            }
-            return {...project, type: 'Project'}
-
-          case 'User':
-            const user: UserRow | undefined = await db.getOne(
-              'SELECT * FROM users WHERE id = ?',
-              [newsfeed_row.id]
-            )
-            if (!user) {
-              throw new Error(`User ${newsfeed_row.id} not found`)
-            }
-            return {...user, type: 'User'}
-
+        if (item.type === 'Announcement') {
+          const announcement: AnnouncementRow | undefined = await db.getOne(
+            'SELECT * FROM announcements WHERE id = ?',
+            [item.id]
+          )
+          if (!announcement) {
+            throw new Error(`Announcement ${item.id} not found`)
+          }
+          return announcement
         }
+
+        return null
 
       }
     })
+
+    t.field('project', {
+
+      type: 'Project',
+
+      async resolve(item) {
+
+        if (item.type === 'Project') {
+          const project: ProjectRow | undefined = await db.getOne(
+            'SELECT * FROM projects WHERE id = ?',
+            [item.id]
+          )
+          if (!project) {
+            throw new Error(`Project ${item.id} not found`)
+          }
+          return project
+        }
+
+        return null
+
+      }
+    })
+    
+    t.field('user', {
+
+      type: 'User',
+
+      async resolve(item) {
+
+        if (item.type === 'User') {
+          const user: UserRow | undefined = await db.getOne(
+            'SELECT * FROM users WHERE id = ?',
+            [item.id]
+          )
+          if (!user) {
+            throw new Error(`User ${item.id} not found`)
+          }
+          return user
+        }
+
+        return null
+
+      }
+    })
+
   }
 
 })

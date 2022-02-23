@@ -35,7 +35,11 @@ type User = {
 }
 
 type NewsfeedItem = {
-  data: (Announcement | Project | User) & {__typename: "Announcement" | "Project" | "User"};
+  id: number;
+  type: "Announcement" | "Project" | "User";
+  announcement: Announcement | null
+  project: Project | null
+  user: User | null
 }
 
 type Props = {
@@ -64,13 +68,13 @@ export default function Newsfeed({ data, handleLoadMore, loadingMore, endReached
   return (
     <>
         {data.map(item => {
-            switch (item.data.__typename) {
+            switch (item.type) {
             case 'Announcement':
-                return <AnnouncementCard announcement={item.data} key={`${item.data.__typename}-${item.data.id}`} />
+                return <AnnouncementCard announcement={item.announcement} key={`${item.type}-${item.id}`} />
             case 'Project':
-                return <ProjectCard project={item.data} key={`${item.data.__typename}-${item.data.id}`} />
+                return <ProjectCard project={item.project} key={`${item.type}-${item.id}`} />
             case 'User':
-                return <UserCard user={item.data} key={`${item.data.__typename}-${item.data.id}`} />
+                return <UserCard user={item.user} key={`${item.type}-${item.id}`} />
             }
         })}
         <Button
