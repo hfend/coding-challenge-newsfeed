@@ -35,8 +35,8 @@ export type UserRow = {
   bio: string;
   avatar_url: string;
   fellowship: "founders" | "angels" | "writers";
-  created_ts: Date;
-  updated_ts: Date;
+  created_ts: string;
+  updated_ts: string;
 }
 
 export type ProjectRow = {
@@ -44,8 +44,8 @@ export type ProjectRow = {
   name: string;
   description: string;
   icon_url: string;
-  created_ts: Date;
-  updated_ts: Date;
+  created_ts: string;
+  updated_ts: string;
 }
 
 export type UserProjectRow = {
@@ -58,12 +58,12 @@ export type AnnouncementRow = {
   fellowship: "founders" | "angels" | "writers" | "all";
   title: string;
   body: string;
-  created_ts: Date;
-  updated_ts: Date;
+  created_ts: string;
+  updated_ts: string;
 }
 
 export type NewsfeedRow = {
   type: "Announcement" | "Project" | "User";
   id: number;
-  created_ts: Date;
+  created_ts: string;
 }
