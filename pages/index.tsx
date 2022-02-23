@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useCookies } from "react-cookie"
-import {useQuery, gql, NetworkStatus} from '@apollo/client'
-import { GetServerSideProps } from 'next'
+import { gql, NetworkStatus} from '@apollo/client'
 import { useRouter } from "next/router";
 import Head from 'next/head'
 
@@ -13,12 +12,7 @@ import { useNewsfeedQuery } from "graphql_client/generated"
 import { Fellowship } from "graphql_client/generated"
 
 
-// TODO
-// - Inifnite scroll (pagination must be reflected in query args)
-// - N+1 queries problem
-// - View As switch (implement as state and note that if it has to be re-used it better be moved to a context that's persisted in a cookie or in local storage)
-
-const PER_PAGE = 10  // TODO move to a better place
+const PER_PAGE = 10
 
 gql`
   query Newsfeed($fellowship: Fellowship!, $offset: Int!, $limit: Int!) {
@@ -49,7 +43,7 @@ gql`
   }
 `
 
-// TODO validate queryFellowship, cookieFellowship, queryPage
+// TODO validate queryFellowship, cookieFellowship
 
 function Home() {
 
@@ -61,16 +55,11 @@ function Home() {
     queryFellowship = query['fellowship'] as Fellowship
   }
 
-  let queryPage: number | undefined = undefined
-  if (query['page'] && typeof query['page'] === 'string') {
-    queryPage = Number(query['page'])
-  }
-
   const [cookies, setCookie] = useCookies(["fellowship"])
   const cookieFellowship = cookies['fellowship']
 
   const [fellowship, setFellowship] = useState<Fellowship>(queryFellowship || cookieFellowship || 'founders');
-  const [page, setPage] = useState<number>(/*queryPage !== undefined ?  queryPage :*/ 1);
+  const [page, setPage] = useState<number>(1);
   const [endReached, setEndReached] = useState<boolean>(false);
 
   useEffect(() => {
@@ -84,7 +73,7 @@ function Home() {
     push(
       {
         pathname: '/',
-        query: { ...query/*, page*/, fellowship }
+        query: { ...query, fellowship }
       },
       undefined,
       { shallow: true }
@@ -94,7 +83,7 @@ function Home() {
       offset: (1 - 1) * PER_PAGE,
       limit: PER_PAGE
     })
-  }, [/*page,*/ fellowship])
+  }, [fellowship])
 
   // Query newsfeed
   const {data, error, loading, fetchMore, refetch, networkStatus} = useNewsfeedQuery(
@@ -116,10 +105,6 @@ function Home() {
   // event handlers
   const handleFellowshipSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setFellowship(event.target.value as Fellowship)
-  }
-
-  const handlePageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPage(Number(event.target.value)) // TODO validate
   }
 
   const handleLoadMore = () => {
@@ -153,9 +138,6 @@ function Home() {
             <option value={Fellowship.Writers}>Writer</option>
           </select>
         </p>
-        <p>
-          Page: <input type="number" value={page} onChange={handlePageChange} disabled={loading || loadingMore} />
-        </p>
 
         {loading && (
           <span>Loading..</span>
@@ -183,19 +165,5 @@ function Home() {
     </Layout>
   )
 }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   // TODO validate
-//   const cookieFellowship = context.req.cookies['fellowship']
-//   const queryFellowship = context.query['fellowship']
-//   const queryPage = context.query['page']
-
-//   return {
-//     props: {
-//       propFellowship: queryFellowship || cookieFellowship || 'founders',
-//       propPage: queryPage || 1
-//     } as Props
-//   }
-// }
 
 export default Home
