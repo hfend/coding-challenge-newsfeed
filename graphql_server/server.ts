@@ -1,11 +1,16 @@
 import { ApolloServer } from 'apollo-server-micro'
 import DataLoader from 'dataloader'
+import depthLimit from 'graphql-depth-limit'
 
 import { schema } from './schema'
 import db, { AnnouncementRow, ProjectRow, UserRow } from './db'
 
 export const server = new ApolloServer({
     schema,
+    validationRules: [
+        // Simplest way to prevent infinite circular reference attacks
+        depthLimit(2)
+    ],
     context: () => {
         return {
 
