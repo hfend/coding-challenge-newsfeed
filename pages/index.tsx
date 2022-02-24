@@ -3,6 +3,7 @@ import { useCookies } from "react-cookie"
 import { gql, NetworkStatus} from '@apollo/client'
 import { useRouter } from "next/router";
 import Head from 'next/head'
+import queryString from 'query-string'
 
 import Card from 'components/Card'
 import Layout from 'components/Layout'
@@ -47,20 +48,24 @@ gql`
 
 function Home() {
 
-  const { query, push } = useRouter()
+  const { query, push, asPath } = useRouter()
 
   // Setup fellowship and page state
   let queryFellowship: Fellowship | undefined = undefined
-  if (query['fellowship'] && typeof query['fellowship'] === 'string') {
-    queryFellowship = query['fellowship'] as Fellowship
+  const queryArgs = queryString.parse(
+    asPath.slice(1,asPath.length)  // slice is for removing the leading slash
+  );
+  if (queryArgs['fellowship'] && typeof queryArgs['fellowship'] === 'string') {
+    queryFellowship = queryArgs['fellowship'] as Fellowship
   }
-
+  
   const [cookies, setCookie] = useCookies(["fellowship"])
   const cookieFellowship = cookies['fellowship']
 
   const [fellowship, setFellowship] = useState<Fellowship>(queryFellowship || cookieFellowship || 'founders');
   const [page, setPage] = useState<number>(1);
   const [endReached, setEndReached] = useState<boolean>(false);
+
 
   useEffect(() => {
     setCookie('fellowship', fellowship, {
