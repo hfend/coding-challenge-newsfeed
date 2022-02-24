@@ -9,13 +9,11 @@ class AsyncDatabase {
   }
 
   async getOne<T = any>(sql: string, params: any[] = []): Promise<T | undefined> {
-    console.log(sql)
     const rows = await this.getAll(sql, params);
     return rows[0];
   }
 
   async getAll<T = any>(sql: string, params: any[] = []): Promise<T[]> {
-    console.log(sql)
     return new Promise((resolve, reject) => {
       const stmt = this.db.prepare(sql)
       stmt.all(...params, (err: Error | undefined, rows: any[]) => {
